@@ -1,0 +1,44 @@
+{% extends 'home.html' %}
+{% block title %}Mattress Detail Management{% endblock %}
+{% block subject %}Manage Mattress Detail{% endblock %}
+{% block content %}
+<table><tbody>
+    <form method = "post" >
+    {% csrf_token %}
+    <tr><td colspan = "2"><label>Select Mattress: </label><select name = "select">
+        {% for product in products %}
+        <option value = "{{product.id}}">{{product.length}}&nbsp;X&nbsp;{{product.width}}&nbsp;X&nbsp;{{product.thickness}}&nbsp;{{product.shortname}}</option>
+        {% endfor %}
+    </select><input type = "submit" value = "More" name = "more" style = "margin-left:10px"/></td></tr>
+    <tr><td><label>ID: </label><input type="text" name = "pid" readonly value = "{{mat.id}}"/></td>
+    <tr><td><label>Length: </label><input type="text" name = "len" value = "{{mat.length}}"/></td>
+    <td><label>Width: </label><input type="text" name = "wid" value = "{{mat.width}}"/></td>
+    <td><label>Thickness: </label><input type="text"  name = "thick" value = "{{mat.thickness}}"/></td></tr>
+    <tr><td><label>Shortname: </label><input type="text" name = "sname" value = "{{mat.shortname}}"/></td>
+    <td><label>Sew (N): </label><input type="text"  name = "price" value = "{{mat.price}}"/></td>
+    <td><label>Wrap (N): </label><input type="text"  name = "wrap" value = "{{mat.wrap}}"/></td></tr>
+    <tr><td><label>Cover (N): </label><input type="text"  name = "lap" value = "{{mat.lap}}"/></td><td></td></tr>
+    <tr><td><label>Add New Mattress   </label><input type="checkbox"  name = "chk" value = "1" id = "chk1"/></td></tr>
+    <tr><td><label>Modify Existing Mattress   </label><input type="checkbox"  name = "chk" value = "2" id = "chk2"/></td></tr>
+    <tr><td><input type = "submit" name = "go" value = "GO"/><input type = "submit" id = "cf" value = "Clear" style = "margin-left:50px" /></td></tr>
+    </form>
+    </tbody>
+    </table>
+    <script>
+        $(document).ready(function(){
+         //alert("Client Side Scripting loaded");
+         $('#cf').click(function(){
+          $(':text').val("");
+          return false;
+         });
+         $('#chk1').click(function(){
+             $('#chk2').prop('checked',false);
+         });
+         $('#chk2').click(function(){
+             $('#chk1').prop('checked',false);
+         });
+        });
+        </script>
+
+
+{% endblock %}

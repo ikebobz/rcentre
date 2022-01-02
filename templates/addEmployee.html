@@ -1,0 +1,45 @@
+{% extends 'home.html' %}
+
+{% block title%}New Employee{% endblock %}
+{% block subject %} New Employee Registration{% endblock %}
+{% block content%}
+<table><tbody>
+<form method = "post" >
+{% csrf_token %}
+<tr><td colspan = "2"><label>Select Employee: </label><select name = "select">
+    {% for staff in staffs %}
+    <option value = "{{staff.id}}">{{staff.lastname}}&nbsp;&nbsp;&nbsp;{{staff.firstname}}</option>
+    {% endfor %}
+</select><input type = "submit" value = "More" name = "more" style = "margin-left:10px"/></td></tr>
+<tr><td><label>ID: </label><input type="text" name = "eid" readonly value = "{{emp.id}}"/></td>
+<tr><td><label>LastName: </label><input type="text" name = "ln" value = "{{emp.lastname}}"/></td>
+<td><label>FirstName: </label><input type="text" name = "fn" value = "{{emp.firstname}}"/></td>
+<td><label>Address: </label><input type="text"  name = "add" value = "{{emp.address}}"/></td></tr>
+<tr><td><label>Mobile: </label><input type="text" name = "mob" value = "{{emp.phone}}"/></td>
+<td><label>NOK_FN: </label><input type="text" name = "nokfn" value = "{{emp.nok_firstname}}"/></td>
+<td><label>NOK_LN: </label><input type="text" name = "nokln" value = "{{emp.nok_lastname}}"/></td></tr>
+<tr><td><label>NOK_Mobile: </label><input type="text"  name = "nokmob" value = "{{emp.nok_phone}}"/></td>
+<td><label>Section: </label><input type="text" name = "sect" value = "{{emp.section}}"/></td>
+<td><label>Email: </label><input type="text" name = "email" value = "{{emp.email}}"/></td></tr>
+<tr><td><label>Add New Employee   </label><input type="checkbox"  name = "chk" value = "1" id = "chk1"/></td></tr>
+<tr><td><label>Modify Existing Employee   </label><input type="checkbox"  name = "chk" value = "2" id = "chk2"/></td></tr>
+<tr><td><input type = "submit" name = "go" value = "GO"/><input type = "submit" id = "cf" value = "Clear" style = "margin-left:50px" /></td></tr>
+</form>
+</tbody>
+</table>
+<script>
+$(document).ready(function(){
+ //alert("Client Side Scripting loaded");
+ $('#cf').click(function(){
+  $(':text').val("");
+  return false;
+ });
+ $('#chk1').click(function(){
+     $('#chk2').prop('checked',false);
+ });
+ $('#chk2').click(function(){
+     $('#chk1').prop('checked',false);
+ });
+});
+</script>
+{% endblock %}

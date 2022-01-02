@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% block title %}Employee Details{% endblock %}
+{% block subject %}Employee Details{% endblock %}
+{% block content %}
+{% for staff in staffs %}
+<h2>{{staff.firstname}}</h2>
+<h2>{{staff.lastname}}</h2>
+<p>{{staff.address}}</p>
+<p>{{staff.phone}}</p>
+{% endfor %}
+{% endblock %}

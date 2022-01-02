@@ -1,0 +1,230 @@
+{% load static %}
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Home{% endblock %}</title>
+    <script type="text/javascript" src = "{% static 'rcentre/jquery.js' %}">
+    </script> 
+    
+    <style>
+ 
+    *{
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body{
+    background: #f5f6fa;
+}
+table{
+    width:100%;
+    margin-top:100px;
+    border-spacing: 10px;
+    
+}
+td{
+    width:30%;
+    text-align: right;
+    color:white;
+    /*padding-right:30px;
+    padding-left:30px;*/
+}
+
+.wrapper #content
+{
+ position:fixed;
+ top:0;
+ left:25%; /*302px;*/
+ height:100%;
+ background:rgb(55,68,80);
+ color:white;
+ width:75%;
+ overflow-y:scroll
+}
+#content h3
+{
+    text-align: center;
+    margin-top:50px;
+}
+
+.wrapper .sidebar{
+    background: rgb(5, 68, 104);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 25%; /*300px;*/
+    height: 100%;
+    padding: 20px 0;
+    transition: all 0.5s ease;
+}
+
+.wrapper .sidebar .profile{
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.wrapper .sidebar .profile img{
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.wrapper .sidebar .profile h3{
+    color: #ffffff;
+    margin: 10px 0 5px;
+}
+
+.wrapper .sidebar .profile p{
+    color: rgb(206, 240, 253);
+    font-size: 14px;
+}
+
+.wrapper .sidebar ul li a{
+    display: block;
+    padding: 13px 30px;
+    border-bottom: 1px solid #10558d;
+    color: rgb(241, 237, 237);
+    font-size: 16px;
+    position: relative;
+}
+
+.wrapper .sidebar ul li a .icon{
+    color: #dee4ec;
+    width: 30px;
+    display: inline-block;
+}
+
+.wrapper .sidebar ul li a:hover,
+.wrapper .sidebar ul li a.active{
+    color: #0c7db1;
+
+    background:white;
+    border-right: 2px solid rgb(5, 68, 104);
+}
+
+.wrapper .sidebar ul li a:hover .icon,
+.wrapper .sidebar ul li a.active .icon{
+    color: #0c7db1;
+}
+
+.wrapper .sidebar ul li a:hover:before,
+.wrapper .sidebar ul li a.active:before{
+    display: block;
+}
+input[type = submit]
+{
+ padding:3px;
+}
+.footer
+{
+ text-align:center;
+}
+#trans
+{
+    margin-top:10px;
+    border-spacing:2px;
+}
+#trans td, #trans th
+{
+    text-align:center;
+    background-color: white;
+    border: 1px solid;
+    color:black;
+    width:24%
+}
+.forbutton
+{
+    margin-top:20px;
+}
+.check
+{
+ 
+}
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!--Top menu -->
+        <div class="sidebar">
+           <div class="profile">
+                <!--<img src="https://1.bp.blogspot.com/-vhmWFWO2r8U/YLjr2A57toI/AAAAAAAACO4/0GBonlEZPmAiQW4uvkCTm5LvlJVd_-l_wCNcBGAsYHQ/s16000/team-1-2.jpg" alt="profile_picture">-->
+				<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJAo5nNiNZINkd4NENAb5JW2rlTc52SrVQqg&usqp=CAU" alt="profile_picture">
+                <h3>Robik Chemicals Limited</h3>
+                <p>Copyright @2021</p>
+            </div>
+            <div>
+			 <ul>
+                <li>
+                    <a href="#" class="active">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span class="item">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/rcentre/addemp/">
+                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <span class="item">Employee Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/rcentre/addprod/">
+                        <span class="icon"><i class="fas fa-product-hunt"></i></span>
+                        <span class="item">Mattress Management</span>
+                    </a>
+                </li>
+                <!--<li>
+                    <a href="#">
+                        <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                        <span class="item">Record Management</span>
+                    </a>
+                </li>-->
+                <li>
+                    <a href="/rcentre/addtrans/">
+                        <span class="icon"><i class="fas fa-database"></i></span>
+                        <span class="item">Record Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fas fa-chart-line"></i></span>
+                        <span class="item">Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fas fa-user-shield"></i></span>
+                        <span class="item">Admin</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><i class="fas fa-cog"></i></span>
+                        <span class="item">Settings</span>
+                    </a>
+                </li>
+            </ul>
+			</div>
+        </div>
+        <div id = "content">
+           <h3>{% block subject %}Welcome to the version 1.0 of Record Centre{% endblock %}</h3>
+           <div>{% block content %}{% endblock %}</div>
+            <div class = "footer">{{message}}</div>
+        </div>
+
+    </div>
+  
+<script>
+
+</script>
+</body>
+</html>

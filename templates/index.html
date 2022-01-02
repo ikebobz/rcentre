@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>{% block title%}Home Page{% endblock %}</title>
+        <style>
+            a{text-decoration: none;}
+            .logout{text-align: center;}
+        </style>
+    </head>
+    <body>
+        <h2>{% block subject %}Welcome to the home page{% endblock %}</h2>
+        <table style = "width:100%;margin-top:160px">
+            <tbody>
+                <tr>
+                    <td style = "width:30%">
+                    <p><a href = "/rcentre/addemp/">Add New Employee</a></p>
+                    <p><a href = "#">Add New Mattress</a></p>
+                    <p><a href = "#">Record a Work Unit</a></p>
+                    </td>
+                    <td>
+                        {% block content%}{% endblock %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class = "logout"><a href = "/rcentre/login/">Logout</a></p>
+    </body>
+</html>

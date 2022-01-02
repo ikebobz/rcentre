@@ -1,0 +1,197 @@
+{% extends 'home.html' %}
+{% block title %}Transaction Management{% endblock %}
+{% block subject %}Manage Transaction Detail{% endblock %}
+{% block content %}
+<table><tbody>
+    <form method = "POST">
+    {% csrf_token %}
+    <tr><td><label>TransactionID: </label><input type="text" name = "tid" readonly value = "{{tran.id}}" id = "tid"/></td></tr>
+    <tr><td><label>Select Mattress: </label><select name = "select1" id = "select1">
+        {% for product in products %}
+        <option value = "{{product.id}}">{{product.length}}&nbsp;X&nbsp;{{product.width}}&nbsp;X&nbsp;{{product.thickness}}&nbsp;{{product.shortname}}</option>
+        {% endfor %}
+    </select></td><td><label>Select Employee: </label><select name = "select2" id = "select2">
+        {% for staff in staffs %}
+        <option value = "{{staff.id}}">{{staff.lastname}}&nbsp;&nbsp;&nbsp;{{staff.firstname}}</option>
+        {% endfor %}
+    </select></td></tr>
+    <tr><td><label>Quantity: </label><input type="text" name = "qty" value = "{{tran.quantity}}" id = "qty"/></td>
+    {% now "Y-m-d" as timenow %}
+    <td><label>Date Sewn: </label><input type="date" name = "sewdate" id = "sewdate" value = "{{tran.datesewn|default:timenow}}"/></td></tr>
+    <!--<tr><td><label>Add New Transaction   </label><input type="checkbox"  name = "chk" value = "1" id = "chk1"/></td></tr>-->
+    <tr><td><label>Modify Existing Transaction   </label><input type="checkbox"  name = "chk" value = "2" id = "chk2"/></td></tr>
+    <tr><td><input type = "submit" name = "go" value = "Add" id = "go"/><input type = "submit" id = "update" value = "Update" style = "margin-left:50px" onclick = "return false"/><input type = "submit" id = "cf" value = "Clear" style = "margin-left:50px" /></td></tr>
+    </form>
+    </tbody>
+    </table>
+    <div>
+        <hr>
+        <h3 style = "text-align:center;margin-top:2px">Search Details</h3>
+        
+        <p style = "text-align:center;margin-top:20px">
+            <label>By Name: </label>
+            <select name = "select3" id = "select3">
+                {% for staff in staffs %}
+                <option value = "{{staff.id}}">{{staff.lastname}}&nbsp;&nbsp;&nbsp;{{staff.firstname}}</option>
+                {% endfor %}
+            </select><input type = "checkbox" style = "margin-left:5px" id = "byname" checked/>
+            <label style = "margin-left:50px">By Date: </label>
+            <input type = "date" value = "{{tran.datesewn|default:timenow}}" id ="srchdate"/>
+            <input type = "checkbox" id = "bydate" checked/>
+        </p>
+        <p style = "text-align:center;margin:10px">
+            <button id = "srchbutton">Search</button>
+        </p>
+        <hr>
+    </div>
+    <table id = "trans">
+        <tr><td class = "check"><input type = "checkbox" /></td><th>Operator</th><th>Mattress</th><th>Quantity</th></tr>
+    </table>
+    <table class = "forbutton">
+        <tr><td><button id = "com">Commit All</button></td><td><button id = "edit">Edit</button></td><td><button id = "del">Remove</button></td></tr>
+    </table>
+    <script>
+        $(document).ready(function(){
+         //alert("Client Side Scripting loaded");
+         $('#update').prop('disabled',true)
+         var items = [];
+         $('#cf').click(function(){
+          $(':text').val("");
+          return false;
+         });
+         $('#chk1').click(function(){
+             $('#chk2').prop('checked',false);
+         });
+         $('#chk2').click(function(){
+             $('#chk1').prop('checked',false);
+         });
+         $('#go').click(function(){
+          //alert("hello");
+          $('#edit').prop('disabled',true);
+          $('#com').prop('disabled',false);
+          var mtype = $('#select1 option:selected').text();
+          var operator = $('#select2 option:selected').text();
+          var quantity = $('#qty').val();                      
+          var markup = "<tr><td class = 'check'><input type = 'checkbox' name = 'record'/></td><td>" + operator + "</td><td>" + mtype + "</td><td>" + quantity + "</td></tr>";
+          $('#trans').append(markup);
+          items.push([$('#select1').val(),$('#select2').val(),$('#qty').val(),$('#sewdate').val()]);
+          console.log(items);
+          return false;
+         })
+         $('#del').click(function(){
+             var counter = 0;
+            $('#trans').find('input[name="record"]').each(function(){
+                if($(this).is(":checked")){
+                    $(this).parents("tr").remove();
+                    items.splice(counter,1);console.log(items);
+                } counter++;
+            });
+        });
+        $('#com').click(function(){
+            if(items.length == 0)
+            {
+                alert('There are no transactions to save');
+                return;
+            }
+            $.ajax({
+                url:"/rcentre/addtrans/",
+                type:"POST",
+                data:{"items[]":items},
+                /*processData:false,
+                contentType:false,*/
+                success:function(data){
+                    alert(data);
+                },
+                error: function(data)
+                {
+                   alert('could not post to resource');
+                }
+                
+            });
+            clearAll();
+            items = []
+        });//end
+        $('#srchbutton').click(function(){
+            $('#com').prop('disabled',true);
+            $('#edit').prop('disabled',false);
+            $.ajax({
+                url:"/rcentre/addtrans/",
+                type:"POST",
+                data:{
+                    'sname': $('#select3').val(),
+                    'sdate': $('#srchdate').val(),
+                    'byname': $('#byname').is(':checked'),
+                    'bydate': $('#srchdate').is(':checked')
+                },
+                success:function(data){
+                    //alert(data);
+                    clearAll();
+                    console.log(data);
+                    const obj = JSON.parse(data);
+                    for(i = 0;i < obj.length;i++)
+                    {
+                    var markup = "<tr><td class = 'check'><input type = 'checkbox' name = 'record'/></td><td>" + obj[i].operator + "<input class = 'hidden' type = 'hidden' value = '" + obj[i].prodid + "'/><input class = 'transid' type = 'hidden' value = '" + obj[i].transid + "' /></td><td>" + obj[i].mattress + "</td><td class = 'quant'>" + obj[i].quantity + "</td></tr>";
+                    $('#trans').append(markup);
+                    }
+                },
+                error: function(data)
+                {
+                   alert('could not post to resource');
+                } 
+            });
+        });
+        $('#edit').click(function(){
+            $('#trans').find('input[name="record"]').each(function(){
+                if($(this).is(":checked")){
+                    matid = $(this).parents("tr").find('.hidden');
+                    qnt = $(this).parents("tr").find('.quant');
+                    transid = $(this).parents("tr").find('.transid');
+                    //alert(qnt.val())
+                    $('#qty').val(qnt.html());
+                    $('#select1').val(matid.val());
+                    $('#select2').val($('#select3').val());
+                    $('#sewdate').val($('#srchdate').val());
+                    $('#tid').val(transid.val());
+                } 
+            }); 
+
+        });
+        $('#update').click(function(){
+            $.ajax({
+                url:"/rcentre/addtrans/",
+                type:"POST",
+                data:{
+                      'qnty': $('#qty').val(),
+                      'trid': $('#tid').val()
+                    },
+                success:function(data){
+                    alert(data);
+                    
+                },
+                error: function(data)
+                {
+                   alert('could not post to resource');
+                }
+                
+            });
+        });
+        $('#chk2').click(function(){
+            if($(this).is(":checked")){
+            $('#update').prop('disabled',false);
+            $('#go').prop('disabled',true);
+            }
+            else
+            {
+            $('#update').prop('disabled',true);
+            $('#go').prop('disabled',false);
+            }
+        })
+        function clearAll()
+        {
+            $('#trans').find('input[name="record"]').each(function(){
+                $(this).parents("tr").remove();
+            });   
+        }
+        });
+        </script>
+{% endblock %}
