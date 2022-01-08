@@ -1,0 +1,46 @@
+{% extends 'home.html' %}
+{% block title %}Reporting{% endblock %}
+{% block subject %}Reporting & PayScheduling{% endblock %}
+{% block content %}
+<hr style = "margin-top:50px">
+<div style = "text-align:center;margin-top:50px">
+    <form method = "POST">
+    {% csrf_token %}
+    <p style = "margin-bottom:20px"><select id = "employee"><option value = "">Select Employee</option>
+    {% for staff in staffs%}
+    <option value = "{{staff.id}}">{{staff.lastname}}&nbsp;&nbsp;&nbsp;{{staff.firstname}}</option>
+    {% endfor %}
+    </select><input type = "checkbox" style = "margin-left:10px" id = "use"/></p>
+<label>Start: </label><input type = "date" id = "start" >
+<label style = "margin-left:100px">End: </label><input type = "date" id = "end"><br>
+<input type = "submit" style ="margin-top:30px" id = "generate" value = "Generate" onclick = "return false"/>
+</form>
+</div>
+<hr style = "margin-top:50px">
+
+<script>
+$(document).ready(function(){
+ $('#generate').click(function(){
+ $.ajax({
+     type: 'POST',
+     url: '/rcentre/reporting/',
+     data: {
+         'start': $('#start').val(),
+         'end': $('#end').val(),
+         'name': $('#employee').val(),
+         'byname': $('#use').is(':checked')
+     },
+     success: function(data)
+     {
+         console.log(data)
+     },
+     error: function(data)
+     {
+         console.log(data);
+     }
+ });
+ });
+})
+</script>
+{% endblock %}
+

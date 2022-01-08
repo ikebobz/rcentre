@@ -138,3 +138,20 @@ def addtransaction(request):
 
     else:
         return render(request,'addtransaction.html',{'staffs':staff.objects.all,'products':mattress.objects.all()})
+@csrf_exempt
+def reporting(request):
+    if request.method == 'POST' and request.POST.get('name') and request.POST.get('byname'):
+        return HttpResponse('Filter By Name')
+    elif request.method == 'POST'and request.POST.get('start') and request.POST.get('end'):
+        try:
+         start = request.POST.get('start')
+         end = request.POST.get('end')
+         txs  = transaction.objects.filter(datesewn__gte = start,datesewn__lte =end).order_by('staffId')
+         values = []
+         name = ''
+         for tx in txs:
+             p = 5
+
+        except Exception as e:
+            return HttpResponse(e)
+    return render(request,'reporting.html',{'staffs': staff.objects.all})

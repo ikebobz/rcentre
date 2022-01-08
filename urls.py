@@ -9,5 +9,6 @@ urlpatterns = [
     path('home/',vw.index,name = "index"),
     path('addemp/',vw.addemp,name = "addemp"),
     path('addprod/',vw.addproduct,name = "addProduct"),
-    path('addtrans/',vw.addtransaction,name ="addtransaction")
+    path('addtrans/',vw.addtransaction,name ="addtransaction"),
+    path('reporting/',vw.reporting,name = "reporting")
 ]
