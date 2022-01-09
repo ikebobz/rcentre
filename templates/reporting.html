@@ -17,7 +17,13 @@
 </form>
 </div>
 <hr style = "margin-top:50px">
+<table id = "forsummary">
+    <tbody>
 
+    </tbody>
+</table>
+<p style = "text-align:center;margin-top:10px"><label style = "margin-left:10px" for = "tpc">TPC: (N)</label><input type = "text" id = "tpc" /><label style = "margin-left:10px">Commission: </label><input type = "text" id = "com" value = "0.25"/><label style = "margin-left:10px">Total Bill: (N)</label><input type = "text" id = "bill" /></p>
+<p style = "text-align:center;margin-top:20px"><button id = "getbill">Get Bill</button></p>
 <script>
 $(document).ready(function(){
  $('#generate').click(function(){
@@ -33,12 +39,32 @@ $(document).ready(function(){
      success: function(data)
      {
          console.log(data)
+         if (data == 'Empty Set') return;
+         $('#forsummary tbody tr').remove()
+         const obj = JSON.parse(data);
+         $('#forsummary tbody').append('<tr><th>FirstName</th><th>LastName</th><th>Amount</th></tr>');
+         for(i = 0;i < obj.length;i++)
+        {
+            if(i == 0) continue;
+            if(i == (obj.length - 1))
+            {
+                $('#tpc').val(obj[i].income)
+            }
+        var markup = "<tr><td>" + obj[i].fn + "</td><td>" + obj[i].sn + "</td><td> N" + obj[i].income + "</td></tr>";
+        $('#forsummary tbody').append(markup);
+        }
      },
      error: function(data)
      {
          console.log(data);
      }
  });
+ });
+ $('#getbill').click(function(){
+   var tpc = parseFloat($('#tpc').val());
+   var com = parseFloat($('#com').val());
+   let bill = tpc * com + tpc;
+   $('#bill').val(bill)
  });
 })
 </script>

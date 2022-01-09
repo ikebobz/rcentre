@@ -69,7 +69,7 @@ def addproduct(request):
         prod.save()
         return render(request,template_name='addProduct.html',context = {'products':mattress.objects.all(),'message':'Save Success!!'})
     elif request.method == 'POST' and request.POST.get('go') and request.POST.get('chk') in ["2"]:
-        prod = mattress.objects.get(id = request.POST('pid'))
+        prod = mattress.objects.get(id = request.POST.get('pid'))
         prod.length = request.POST.get('len')
         prod.width = request.POST.get('wid')
         prod.thickness = request.POST.get('thick')
@@ -147,11 +147,58 @@ def reporting(request):
          start = request.POST.get('start')
          end = request.POST.get('end')
          txs  = transaction.objects.filter(datesewn__gte = start,datesewn__lte =end).order_by('staffId')
+         if txs.count() == 0:
+             return HttpResponse('Empty Set')
          values = []
-         name = ''
+         firstname = ''
+         lastname = ''
+         income = 0
+         total = 0
+         dio = 0
+         lap = 0
+         totaldio = 0
+         totallap = 0
+         id = 0
          for tx in txs:
-             p = 5
-
+             if tx.staffId != id:
+                 values.append({'fn':firstname,'sn':lastname,'income':income})
+                 id = tx.staffId
+                 firstname,lastname,val,dcost,lcost= getDetails(tx)
+                 total = total + income
+                 totaldio = totaldio + dio
+                 totallap = totallap + lap
+                 income = val
+                 dio = dcost
+                 lap = lcost
+             else:
+                _,_,x,y,z = getDetails(tx)
+                income = income + x
+                dio = dio + y
+                lap = lap + z
+         total = total + income
+         totaldio = totaldio + dio
+         totallap = totallap + lap
+         tpc = total + totaldio + totallap
+         values.append({'fn':firstname,'sn':lastname,'income':income})
+         values.append({'fn':'Total Sewing Cost','sn':'','income':total})
+         values.append({'fn':'Total Wrapping Cost','sn':'','income':totaldio})
+         values.append({'fn':'Total Lapping Cost','sn':'','income':totallap})
+         values.append({'fn':'Total Production Cost','sn':'','income':tpc})
+         jsonObject = json.dumps(values)
+         return HttpResponse(jsonObject)
         except Exception as e:
             return HttpResponse(e)
     return render(request,'reporting.html',{'staffs': staff.objects.all})
+def getDetails(transact):
+    try:
+     firstname = staff.objects.get(id = transact.staffId).firstname
+     lastname = staff.objects.get(id = transact.staffId).lastname
+     rate = mattress.objects.get(id = transact.mattressID).price
+     diocost = mattress.objects.get(id = transact.mattressID).wrap
+     lapcost = mattress.objects.get(id = transact.mattressID).lap
+     value = rate * float(transact.quantity)
+     dvalue = diocost * float(transact.quantity)
+     lvalue = lapcost * float(transact.quantity)
+     return firstname,lastname,value,dvalue,lvalue
+    except:
+        return 'fail','fail',0
