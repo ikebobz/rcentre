@@ -39,7 +39,7 @@ $(document).ready(function(){
      success: function(data)
      {
          console.log(data)
-         if (data == 'Empty Set') return;
+         /*if (data == 'Empty Set') return;
          $('#forsummary tbody tr').remove()
          const obj = JSON.parse(data);
          $('#forsummary tbody').append('<tr><th>FirstName</th><th>LastName</th><th>Amount</th></tr>');
@@ -52,7 +52,7 @@ $(document).ready(function(){
             }
         var markup = "<tr><td>" + obj[i].fn + "</td><td>" + obj[i].sn + "</td><td> N" + obj[i].income + "</td></tr>";
         $('#forsummary tbody').append(markup);
-        }
+        }*/
      },
      error: function(data)
      {

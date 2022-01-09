@@ -141,7 +141,26 @@ def addtransaction(request):
 @csrf_exempt
 def reporting(request):
     if request.method == 'POST' and request.POST.get('name') and request.POST.get('byname'):
-        return HttpResponse('Filter By Name')
+        #return HttpResponse('Filter By Name')
+        try:
+         guy = request.POST.get('name')
+         start = request.POST.get('start')
+         end = request.POST.get('end')
+         values = []
+         txs  = transaction.objects.filter(datesewn__gte = start,datesewn__lte = end,staffId = guy).order_by('datesewn')
+         if txs.count() == 0:
+             return HttpResponse('Empty Set')
+         total = 0
+         for tx in txs:
+            #total = 0
+            _,_,amount,_,_, = getDetails(tx)
+            total = total + amount
+            values.append({'date':str(tx.datesewn),'amount':amount})
+         values.append({'date':'Total','amount':total})
+         jsonObject = json.dumps(values)
+         return HttpResponse(jsonObject)
+        except Exception as e:
+            return HttpResponse(e)
     elif request.method == 'POST'and request.POST.get('start') and request.POST.get('end'):
         try:
          start = request.POST.get('start')
