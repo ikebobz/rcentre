@@ -147,6 +147,7 @@ def reporting(request):
          start = request.POST.get('start')
          end = request.POST.get('end')
          values = []
+         values.append({'type':1})
          txs  = transaction.objects.filter(datesewn__gte = start,datesewn__lte = end,staffId = guy).order_by('datesewn')
          if txs.count() == 0:
              return HttpResponse('Empty Set')
@@ -169,6 +170,7 @@ def reporting(request):
          if txs.count() == 0:
              return HttpResponse('Empty Set')
          values = []
+         values.append({'type':2})
          firstname = ''
          lastname = ''
          income = 0
